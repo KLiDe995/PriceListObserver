@@ -1,4 +1,5 @@
 rootProject.name = 'PriceListObserver'
 include 'Domain'
 include 'UseCase'
+include 'App'
 

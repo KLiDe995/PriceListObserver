@@ -1,0 +1,14 @@
+apply plugin: 'java'
+
+ext.moduleName = 'PriceListObserver.App'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation(
+            project(':Domain'),
+            project(':UseCase')
+    )
+}
