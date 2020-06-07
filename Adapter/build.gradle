@@ -1,0 +1,10 @@
+apply plugin: 'java'
+
+ext.moduleName = 'PriceListObserver.Adapter'
+
+dependencies {
+    implementation(
+            project(':Domain'),
+            project(':UseCase')
+    )
+}
