@@ -34,8 +34,8 @@ public final class CreateCarPart {
                 .searchVendor(searchVendor)
                 .searchNumber(searchNumber)
                 .description(stringFieldCutter.cut(rawCarPart.getDescription(), 512)) //TODO: сделать через конфиг
-                .price(converter.convertToFloat(rawCarPart.getPrice()))
-                .count(converter.convertToInt(rawCarPart.getCount()))
+                .price(Float.parseFloat(rawCarPart.getPrice()))
+                .count(Integer.parseInt(rawCarPart.getCount()))
                 .build();
 
         repository.create(newCarPart);
