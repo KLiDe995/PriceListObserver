@@ -12,5 +12,4 @@ public class StringFieldConverter implements FieldConverter {
         Matcher matcher = pattern.matcher(rawString);
         return matcher.replaceAll("");
     }
-
 }

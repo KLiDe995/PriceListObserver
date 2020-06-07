@@ -6,18 +6,15 @@ import ru.ivglv.PriceListObserver.Model.Entity.RawCarPart;
 import ru.ivglv.PriceListObserver.Model.Exceptions.CarPartExistsException;
 import ru.ivglv.PriceListObserver.Model.Exceptions.IncorrectFieldException;
 import ru.ivglv.PriceListObserver.Model.Port.FieldConverter;
-import ru.ivglv.PriceListObserver.Model.Port.StringFieldCutter;
 import ru.ivglv.PriceListObserver.UseCase.Validator.CarPartValidator;
 
 public final class CreateCarPart {
     private final CarPartRepository repository;
     private final FieldConverter converter;
-    private final StringFieldCutter stringFieldCutter;
 
-    public CreateCarPart(CarPartRepository repository, FieldConverter converter, StringFieldCutter stringFieldCutter) {
+    public CreateCarPart(CarPartRepository repository, FieldConverter converter) {
         this.repository = repository;
         this.converter = converter;
-        this.stringFieldCutter = stringFieldCutter;
     }
 
     public CarPart create(final RawCarPart rawCarPart) throws IncorrectFieldException, CarPartExistsException {
@@ -25,6 +22,9 @@ public final class CreateCarPart {
 
         String searchVendor = converter.convertToSearchString(rawCarPart.getVendor());
         String searchNumber = converter.convertToSearchString(rawCarPart.getNumber());
+        String description = rawCarPart.getDescription().length() <= 512    //TODO: сделать через конфиг
+                ? rawCarPart.getDescription()
+                : rawCarPart.getDescription().substring(0, 512);
 
         if(repository.findBySearchFields(searchVendor, searchNumber).isPresent())
         {
@@ -33,7 +33,7 @@ public final class CreateCarPart {
         CarPart newCarPart = new CarPart.Builder(rawCarPart.getVendor(), rawCarPart.getNumber())
                 .searchVendor(searchVendor)
                 .searchNumber(searchNumber)
-                .description(stringFieldCutter.cut(rawCarPart.getDescription(), 512)) //TODO: сделать через конфиг
+                .description(description)
                 .price(Float.parseFloat(rawCarPart.getPrice()))
                 .count(Integer.parseInt(rawCarPart.getCount()))
                 .build();
