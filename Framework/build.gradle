@@ -1,0 +1,11 @@
+apply plugin: 'java-library'
+
+ext.moduleName = 'PriceListObserver.Framework'
+
+dependencies {
+    implementation(
+            project(':Adapter')
+            , project(':Domain')
+            , project(':Config')
+    )
+}

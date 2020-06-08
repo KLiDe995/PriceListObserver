@@ -21,7 +21,7 @@ public final class RemoteDbRepository implements CarPartRepository {
     }
 
     private void dbInit() {
-        db.connect(dbConfig.getDbUrl(), dbConfig.getDbUser(), dbConfig.getPass());
+        db.connect();
     }
 
     @Override

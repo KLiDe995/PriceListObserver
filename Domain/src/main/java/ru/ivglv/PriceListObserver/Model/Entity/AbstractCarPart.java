@@ -1,5 +1,7 @@
 package ru.ivglv.PriceListObserver.Model.Entity;
 
+import java.util.Objects;
+
 public abstract class AbstractCarPart {
     protected String vendor;
 
@@ -23,5 +25,20 @@ public abstract class AbstractCarPart {
 
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AbstractCarPart)) return false;
+        AbstractCarPart that = (AbstractCarPart) o;
+        return vendor.equals(that.vendor) &&
+                number.equals(that.number) &&
+                Objects.equals(description, that.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(vendor, number, description);
     }
 }

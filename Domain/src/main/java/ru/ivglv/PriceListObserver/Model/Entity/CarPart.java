@@ -1,5 +1,7 @@
 package ru.ivglv.PriceListObserver.Model.Entity;
 
+import java.util.Objects;
+
 public final class CarPart extends AbstractCarPart{
 
     private String searchVendor;
@@ -29,6 +31,23 @@ public final class CarPart extends AbstractCarPart{
 
     public int getCount() {
         return count;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CarPart carPart = (CarPart) o;
+        return super.equals(carPart) &&
+                Float.compare(carPart.price, price) == 0 &&
+                count == carPart.count &&
+                searchVendor.equals(carPart.searchVendor) &&
+                searchNumber.equals(carPart.searchNumber);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(searchVendor, searchNumber, price, count);
     }
 
     public static class Builder

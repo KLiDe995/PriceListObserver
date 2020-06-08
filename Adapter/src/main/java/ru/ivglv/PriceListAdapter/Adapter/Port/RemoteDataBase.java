@@ -8,7 +8,8 @@ import java.util.Optional;
 
 public interface RemoteDataBase {
     void insert(@NotNull CarPart carPart);
-    void connect(String db_url, String user, String pass);
+    void connect();
+    void disconnect();
 
     Optional<CarPart> selectByIndex(@NotNull String searchVendor, @NotNull String searchNumber);
     List<CarPart> selectAll();
