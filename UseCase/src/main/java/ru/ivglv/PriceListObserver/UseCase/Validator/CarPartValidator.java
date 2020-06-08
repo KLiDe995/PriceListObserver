@@ -3,7 +3,7 @@ package ru.ivglv.PriceListObserver.UseCase.Validator;
 import ru.ivglv.PriceListObserver.Model.Entity.RawCarPart;
 import ru.ivglv.PriceListObserver.Model.Exceptions.IncorrectFieldException;
 
-public class CarPartValidator {
+public final class CarPartValidator {
     private static String vendor;
     private static String number;
 
@@ -20,7 +20,7 @@ public class CarPartValidator {
         }
         catch (NumberFormatException ex)
         {
-            throw new IncorrectFieldException("Price", vendor, number); //TODO: конфиг
+            throw new IncorrectFieldException("Price", vendor, number);
         }
     }
 
@@ -30,7 +30,7 @@ public class CarPartValidator {
         }
         catch (NumberFormatException ex)
         {
-            throw new IncorrectFieldException("Count", vendor, number); //TODO: конфиг
+            throw new IncorrectFieldException("Count", vendor, number);
         }
     }
 

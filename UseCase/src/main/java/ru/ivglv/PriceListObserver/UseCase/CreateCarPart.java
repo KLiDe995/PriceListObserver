@@ -1,5 +1,6 @@
 package ru.ivglv.PriceListObserver.UseCase;
 
+import ru.ivglv.PriceListObserver.Configuration.Properties.ProviderConfig;
 import ru.ivglv.PriceListObserver.Model.Port.CarPartRepository;
 import ru.ivglv.PriceListObserver.Model.Entity.CarPart;
 import ru.ivglv.PriceListObserver.Model.Entity.RawCarPart;
@@ -11,10 +12,12 @@ import ru.ivglv.PriceListObserver.UseCase.Validator.CarPartValidator;
 public final class CreateCarPart {
     private final CarPartRepository repository;
     private final FieldConverter converter;
+    private final ProviderConfig providerConfig;
 
-    public CreateCarPart(CarPartRepository repository, FieldConverter converter) {
+    public CreateCarPart(CarPartRepository repository, FieldConverter converter, ProviderConfig providerConfig) {
         this.repository = repository;
         this.converter = converter;
+        this.providerConfig = providerConfig;
     }
 
     public CarPart create(final RawCarPart rawCarPart) throws IncorrectFieldException, CarPartExistsException {
@@ -22,9 +25,9 @@ public final class CreateCarPart {
 
         String searchVendor = converter.convertToSearchString(rawCarPart.getVendor());
         String searchNumber = converter.convertToSearchString(rawCarPart.getNumber());
-        String description = rawCarPart.getDescription().length() <= 512    //TODO: сделать через конфиг
+        String description = rawCarPart.getDescription().length() <= providerConfig.getMaxDescriptionLenght()
                 ? rawCarPart.getDescription()
-                : rawCarPart.getDescription().substring(0, 512);
+                : rawCarPart.getDescription().substring(0, providerConfig.getMaxDescriptionLenght());
 
         if(repository.findBySearchFields(searchVendor, searchNumber).isPresent())
         {

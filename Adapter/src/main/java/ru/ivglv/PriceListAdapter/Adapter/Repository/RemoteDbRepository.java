@@ -2,6 +2,7 @@ package ru.ivglv.PriceListAdapter.Adapter.Repository;
 
 import org.jetbrains.annotations.NotNull;
 import ru.ivglv.PriceListAdapter.Adapter.Port.RemoteDataBase;
+import ru.ivglv.PriceListObserver.Configuration.Properties.DbConfig;
 import ru.ivglv.PriceListObserver.Model.Entity.CarPart;
 import ru.ivglv.PriceListObserver.Model.Port.CarPartRepository;
 
@@ -10,19 +11,17 @@ import java.util.Optional;
 
 public final class RemoteDbRepository implements CarPartRepository {
 
-    private final RemoteDataBase db;
+    @NotNull private final RemoteDataBase db;
+    @NotNull private final DbConfig dbConfig;
 
-    public RemoteDbRepository(@NotNull RemoteDataBase db) {
+    public RemoteDbRepository(@NotNull RemoteDataBase db,@NotNull DbConfig dbConfig) {
         this.db = db;
+        this.dbConfig = dbConfig;
         dbInit();
     }
 
     private void dbInit() {
-        //TODO: make Config
-        String DB_URL = "jdbc:postgresql://127.0.0.1:5432/carparts";
-        String USER = "appUser";
-        String PASS = "12345678";
-        db.connect(DB_URL, USER, PASS);
+        db.connect(dbConfig.getDbUrl(), dbConfig.getDbUser(), dbConfig.getPass());
     }
 
     @Override
