@@ -55,7 +55,7 @@ public class PostgreSqlHelper implements RemoteDataBase {
     @Override
     public void connect() throws ConnectionFailException {
         try {
-            dbConnection = DriverManager.getConnection(config.getDbUrl(), config.getDbUser(), config.getPass());
+            dbConnection = DriverManager.getConnection(config.getDbUrl(), config.getDbUser(), config.getDbPass());
         }
         catch (SQLException ex)
         {

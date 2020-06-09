@@ -1,29 +1,24 @@
 package ru.ivglv.PriceListObserver.Configuration.Properties;
 
-import org.jetbrains.annotations.NotNull;
 import ru.ivglv.PriceListObserver.Configuration.Port.Config;
 
+import java.util.Objects;
+
 public final class ProviderConfig implements Config {
-    @NotNull
     private String vendorColumnName;
-    @NotNull
     private String numberColumnName;
-    @NotNull
     private String descrColumnName;
-    @NotNull
     private String priceColumnName;
-    @NotNull
     private String countColumnName;
-    @NotNull
     private Integer maxDescriptionLenght;
 
     public ProviderConfig(
-            @NotNull String vendorColumnName
-            , @NotNull String numberColumnName
-            , @NotNull String descrColumnName
-            , @NotNull String priceColumnName
-            , @NotNull String countColumnName
-            , @NotNull Integer maxDescriptionLenght) {
+            String vendorColumnName
+            , String numberColumnName
+            , String descrColumnName
+            , String priceColumnName
+            , String countColumnName
+            , Integer maxDescriptionLenght) {
         this.vendorColumnName = vendorColumnName;
         this.numberColumnName = numberColumnName;
         this.descrColumnName = descrColumnName;
@@ -54,5 +49,35 @@ public final class ProviderConfig implements Config {
 
     public Integer getMaxDescriptionLenght() {
         return maxDescriptionLenght;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ProviderConfig)) return false;
+        ProviderConfig that = (ProviderConfig) o;
+        return vendorColumnName.equals(that.vendorColumnName) &&
+                numberColumnName.equals(that.numberColumnName) &&
+                descrColumnName.equals(that.descrColumnName) &&
+                priceColumnName.equals(that.priceColumnName) &&
+                countColumnName.equals(that.countColumnName) &&
+                maxDescriptionLenght.equals(that.maxDescriptionLenght);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(vendorColumnName, numberColumnName, descrColumnName, priceColumnName, countColumnName, maxDescriptionLenght);
+    }
+
+    @Override
+    public String toString() {
+        return "ProviderConfig{" +
+                "vendorColumnName='" + vendorColumnName + '\'' +
+                ", numberColumnName='" + numberColumnName + '\'' +
+                ", descrColumnName='" + descrColumnName + '\'' +
+                ", priceColumnName='" + priceColumnName + '\'' +
+                ", countColumnName='" + countColumnName + '\'' +
+                ", maxDescriptionLenght=" + maxDescriptionLenght +
+                '}';
     }
 }

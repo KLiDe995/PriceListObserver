@@ -3,34 +3,38 @@ package ru.ivglv.PriceListObserver.Configuration.Helper;
 import ru.ivglv.PriceListObserver.Configuration.Port.ConfigReader;
 import ru.ivglv.PriceListObserver.Configuration.Properties.ProviderConfig;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Properties;
+import java.util.ResourceBundle;
 
-public final class ProviderConfigReader implements ConfigReader {
-    private String path;
+public final class ProviderConfigReader extends ConfigReader {
+    private final Integer DEFAULT_DESCR_LENGHT = 512;
 
-    public ProviderConfigReader(String path) {
-        this.path = path;
+    public ProviderConfigReader(String bundleName) {
+        super(bundleName);
     }
 
     @Override
     public ProviderConfig read() throws IOException
     {
-        Properties prop = new Properties();
-        prop.load(new FileInputStream(path));
+        ResourceBundle prop = ResourceBundle.getBundle(bundleName,CsControl.Cp1251);
+
         return new ProviderConfig(
-                prop.getProperty("vendorColumnName")
-                , prop.getProperty("numberColumnName")
-                , prop.getProperty("descrColumnName")
-                , prop.getProperty("priceColumnName")
-                , prop.getProperty("countColumnName")
-                , Integer.parseInt(prop.getProperty("maxDescriptionLenght", "512"))
+                prop.getString("vendor_column_name")
+                , prop.getString("number_column_name")
+                , prop.getString("descr_column_name")
+                , prop.getString("price_column_name")
+                , prop.getString("count_column_name")
+                , parseInt(prop.getString("max_description_lenght"))
         );
+    }
 
-
-
-
-
+    private Integer parseInt(String input)
+    {
+        try {
+            return Integer.parseInt(input);
+        }
+        catch(NumberFormatException ex) {
+            return DEFAULT_DESCR_LENGHT;
+        }
     }
 }

@@ -3,27 +3,25 @@ package ru.ivglv.PriceListObserver.Configuration.Helper;
 import ru.ivglv.PriceListObserver.Configuration.Port.ConfigReader;
 import ru.ivglv.PriceListObserver.Configuration.Properties.DbConfig;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Properties;
+import java.util.ResourceBundle;
 
-public final class DbConfigReader implements ConfigReader {
-    private String path;
+public final class DbConfigReader extends ConfigReader {
 
-    public DbConfigReader(String path) {
-        this.path = path;
+    public DbConfigReader(String bundleName) {
+        super(bundleName);
     }
 
     @Override
     public DbConfig read() throws IOException
     {
-        Properties prop = new Properties();
-        prop.load(new FileInputStream(path));
+        ResourceBundle prop = ResourceBundle.getBundle(bundleName,CsControl.Cp1251);
+
         return new DbConfig(
-            prop.getProperty("DB_URL")
-            , prop.getProperty("DB_USER")
-            , prop.getProperty("PASS")
-            , prop.getProperty("TABLE_NAME")
+            prop.getString("db_url")
+            , prop.getString("db_user")
+            , prop.getString("db_pass")
+            , prop.getString("db_table_name")
         );
     }
 }

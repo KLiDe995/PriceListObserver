@@ -12,16 +12,9 @@ import java.util.Optional;
 public final class RemoteDbRepository implements CarPartRepository {
 
     @NotNull private final RemoteDataBase db;
-    @NotNull private final DbConfig dbConfig;
 
-    public RemoteDbRepository(@NotNull RemoteDataBase db,@NotNull DbConfig dbConfig) {
+    public RemoteDbRepository(@NotNull RemoteDataBase db) {
         this.db = db;
-        this.dbConfig = dbConfig;
-        dbInit();
-    }
-
-    private void dbInit() {
-        db.connect();
     }
 
     @Override

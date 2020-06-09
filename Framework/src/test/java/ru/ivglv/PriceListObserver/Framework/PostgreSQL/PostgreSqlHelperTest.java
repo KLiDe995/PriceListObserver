@@ -18,7 +18,7 @@ public class PostgreSqlHelperTest {
     CarPart testCarPart2;
     CarPart testCarPart3;
 
-    @BeforeClass
+    @BeforeClass(enabled = false)
     public void setUp() throws ClassNotFoundException {
         postgreSqlHelper = new PostgreSqlHelper(new DbConfig(
                 "jdbc:postgresql://127.0.0.1:5432/carparts"
@@ -48,12 +48,12 @@ public class PostgreSqlHelperTest {
                 .build();
     }
 
-    @AfterClass
+    @AfterClass(enabled = false)
     public void tearDown() {
         postgreSqlHelper.disconnect();
     }
 
-    @Test
+    @Test(enabled = false)
     public void testCheckClass() {
         try {
             postgreSqlHelper.checkClass();
@@ -65,13 +65,13 @@ public class PostgreSqlHelperTest {
         Assert.assertTrue(true);
     }
 
-    @Test
+    @Test(enabled = false)
     public void testConnect() {
         postgreSqlHelper.connect();
         Assert.assertTrue(postgreSqlHelper.connected());
     }
 
-    @Test
+    @Test(enabled = false)
     public void testInsert() {
         postgreSqlHelper.connect();
         postgreSqlHelper.insert(testCarPart1);
@@ -82,7 +82,7 @@ public class PostgreSqlHelperTest {
         Assert.assertTrue(testCarPart1.equals(actual));
     }
 
-    @Test
+    @Test(enabled = false)
     public void testSelectByIndex() {
         postgreSqlHelper.connect();
         postgreSqlHelper.insert(testCarPart1);
@@ -94,7 +94,7 @@ public class PostgreSqlHelperTest {
         Assert.assertTrue(testCarPart2.equals(actual));
     }
 
-    @Test
+    @Test(enabled = false)
     public void testSelectAll() {
         postgreSqlHelper.connect();
         postgreSqlHelper.insert(testCarPart1);
