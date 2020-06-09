@@ -7,5 +7,6 @@ dependencies {
             project(':Adapter')
             , project(':Domain')
             , project(':Config')
+            , "javax.mail:mail:1.4.7"
     )
 }

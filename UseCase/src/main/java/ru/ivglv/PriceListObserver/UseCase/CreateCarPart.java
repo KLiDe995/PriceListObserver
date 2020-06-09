@@ -1,12 +1,12 @@
 package ru.ivglv.PriceListObserver.UseCase;
 
-import ru.ivglv.PriceListObserver.Configuration.Properties.ProviderConfig;
 import ru.ivglv.PriceListObserver.Model.Port.CarPartRepository;
 import ru.ivglv.PriceListObserver.Model.Entity.CarPart;
 import ru.ivglv.PriceListObserver.Model.Entity.RawCarPart;
 import ru.ivglv.PriceListObserver.Model.Exceptions.CarPartExistsException;
 import ru.ivglv.PriceListObserver.Model.Exceptions.IncorrectFieldException;
 import ru.ivglv.PriceListObserver.Model.Port.FieldConverter;
+import ru.ivglv.PriceListObserver.UseCase.Port.ProviderConfig;
 import ru.ivglv.PriceListObserver.UseCase.Validator.CarPartValidator;
 
 public final class CreateCarPart {

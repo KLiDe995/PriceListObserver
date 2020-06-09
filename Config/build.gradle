@@ -1,3 +1,9 @@
 apply plugin: 'java-library'
 
 ext.moduleName = 'PriceListObserver.Config'
+
+dependencies {
+    implementation(
+            project(':UseCase')
+    )
+}

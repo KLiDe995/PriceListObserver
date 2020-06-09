@@ -4,7 +4,6 @@ ext.moduleName = 'PriceListObserver.UseCase'
 
 dependencies {
     implementation(
-            project(':Domain'),
-            project(':Config')
+            project(':Domain')
     )
 }
