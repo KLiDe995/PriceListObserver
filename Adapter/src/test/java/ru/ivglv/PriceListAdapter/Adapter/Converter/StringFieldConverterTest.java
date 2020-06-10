@@ -16,9 +16,9 @@ public class StringFieldConverterTest {
     @Test
     public void testConvertToSearchString() {
         String input1 = "!@#Abcd%^&12 34_*()efgh";
-        String input2 = "ABCD-1";
+        String input2 = "ABcD-1";
 
-        String expected1 = "Abcd1234efgh";
+        String expected1 = "ABCD1234EFGH";
         String expected2 = "ABCD1";
 
         String actual1 = converter.convertToSearchString(input1);

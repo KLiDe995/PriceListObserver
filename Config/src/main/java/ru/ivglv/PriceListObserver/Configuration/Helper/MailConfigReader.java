@@ -26,7 +26,7 @@ public final class MailConfigReader extends ConfigReader {
                 , prop.getString("imap_ssl_enable")
                 , prop.getString("imap_auth_email")
                 , prop.getString("imap_auth_password")
-                , prop.getString("imap_folder")
+                , prop.getString("imap_folder_name")
                 , prop.getString("imap_file_ext")
         );
     }

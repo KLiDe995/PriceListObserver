@@ -10,7 +10,7 @@ public final class MailConfig implements Config {
     private String imapSslEnable;
     private String imapAuthEmail;
     private String imapAuthPassword;
-    private String imapFolder;
+    private String imapFolderName;
     private String imapFileExt;
 
     public MailConfig (String imapAuthServer
@@ -18,14 +18,14 @@ public final class MailConfig implements Config {
             , String imapSslEnable
             , String imapAuthEmail
             , String imapAuthPassword
-            , String imapFolder
+            , String imapFolderName
             , String imapFileExt) {
         this.imapAuthServer = imapAuthServer;
         this.imapPort = imapPort;
         this.imapSslEnable = imapSslEnable;
         this.imapAuthEmail = imapAuthEmail;
         this.imapAuthPassword = imapAuthPassword;
-        this.imapFolder = imapFolder;
+        this.imapFolderName = imapFolderName;
         this.imapFileExt = imapFileExt;
     }
 
@@ -49,8 +49,8 @@ public final class MailConfig implements Config {
         return imapAuthPassword;
     }
 
-    public String getImapFolder() {
-        return imapFolder;
+    public String getImapFolderName() {
+        return imapFolderName;
     }
 
     public String getImapFileExt() {
@@ -67,12 +67,12 @@ public final class MailConfig implements Config {
                 imapSslEnable.equals(that.imapSslEnable) &&
                 imapAuthEmail.equals(that.imapAuthEmail) &&
                 imapAuthPassword.equals(that.imapAuthPassword) &&
-                imapFolder.equals(that.imapFolder) &&
+                imapFolderName.equals(that.imapFolderName) &&
                 imapFileExt.equals(that.imapFileExt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(imapAuthServer, imapPort, imapSslEnable, imapAuthEmail, imapAuthPassword, imapFolder, imapFileExt);
+        return Objects.hash(imapAuthServer, imapPort, imapSslEnable, imapAuthEmail, imapAuthPassword, imapFolderName, imapFileExt);
     }
 }

@@ -10,6 +10,6 @@ public final class StringFieldConverter implements FieldConverter {
     public String convertToSearchString(String rawString) {
         Pattern pattern = Pattern.compile("[\\W_]");
         Matcher matcher = pattern.matcher(rawString);
-        return matcher.replaceAll("");
+        return matcher.replaceAll("").toUpperCase();
     }
 }

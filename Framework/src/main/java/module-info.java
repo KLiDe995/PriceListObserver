@@ -4,4 +4,5 @@ module PriceListObserver.Framework {
     requires PriceListObserver.Config;
     requires org.jetbrains.annotations;
     requires java.sql;
+    requires mail;
 }
