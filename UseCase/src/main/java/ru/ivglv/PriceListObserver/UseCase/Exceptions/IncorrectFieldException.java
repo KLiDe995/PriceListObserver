@@ -1,6 +1,6 @@
-package ru.ivglv.PriceListObserver.Model.Exceptions;
+package ru.ivglv.PriceListObserver.UseCase.Exceptions;
 
-public class IncorrectFieldException extends Exception {
+public class IncorrectFieldException extends UseCaseException {
     public IncorrectFieldException(String badField, String vendor, String number) {
         super("Incorrect value in field "
                 + badField

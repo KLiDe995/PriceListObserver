@@ -50,6 +50,19 @@ public final class CarPart extends AbstractCarPart{
         return Objects.hash(searchVendor, searchNumber, price, count);
     }
 
+    @Override
+    public String toString() {
+        return "CarPart{" +
+                "vendor='" + vendor + '\'' +
+                ", number='" + number + '\'' +
+                ", searchVendor='" + searchVendor + '\'' +
+                ", searchNumber='" + searchNumber + '\'' +
+                ", price=" + price +
+                ", count=" + count +
+                ", description='" + description + '\'' +
+                '}';
+    }
+
     public static class Builder
     {
         private CarPart newCarPart;

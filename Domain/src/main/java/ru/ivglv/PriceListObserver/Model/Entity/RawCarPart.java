@@ -27,6 +27,11 @@ public final class RawCarPart extends AbstractCarPart {
             newRawCarPart = new RawCarPart(vendor, number);
         }
 
+        public Builder description(String description) {
+            newRawCarPart.description = description;
+            return this;
+        }
+
         public Builder price(String price)
         {
             newRawCarPart.price = price;

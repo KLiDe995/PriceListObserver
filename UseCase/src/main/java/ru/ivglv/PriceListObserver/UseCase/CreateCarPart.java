@@ -1,33 +1,38 @@
 package ru.ivglv.PriceListObserver.UseCase;
 
+import org.jetbrains.annotations.NotNull;
 import ru.ivglv.PriceListObserver.Model.Port.CarPartRepository;
 import ru.ivglv.PriceListObserver.Model.Entity.CarPart;
 import ru.ivglv.PriceListObserver.Model.Entity.RawCarPart;
-import ru.ivglv.PriceListObserver.Model.Exceptions.CarPartExistsException;
-import ru.ivglv.PriceListObserver.Model.Exceptions.IncorrectFieldException;
+import ru.ivglv.PriceListObserver.UseCase.Exceptions.CarPartExistsException;
+import ru.ivglv.PriceListObserver.UseCase.Exceptions.IncorrectFieldException;
 import ru.ivglv.PriceListObserver.Model.Port.FieldConverter;
-import ru.ivglv.PriceListObserver.UseCase.Port.ProviderConfig;
+import ru.ivglv.PriceListObserver.UseCase.Exceptions.UseCaseException;
+import ru.ivglv.PriceListObserver.UseCase.Port.MaxDescrLenghtConfig;
 import ru.ivglv.PriceListObserver.UseCase.Validator.CarPartValidator;
 
 public final class CreateCarPart {
+    @NotNull
     private final CarPartRepository repository;
+    @NotNull
     private final FieldConverter converter;
-    private final ProviderConfig providerConfig;
+    @NotNull
+    private final MaxDescrLenghtConfig maxDescrLenghtConfig;
 
-    public CreateCarPart(CarPartRepository repository, FieldConverter converter, ProviderConfig providerConfig) {
+    public CreateCarPart(@NotNull CarPartRepository repository, @NotNull FieldConverter converter, @NotNull MaxDescrLenghtConfig maxDescrLenghtConfig) {
         this.repository = repository;
         this.converter = converter;
-        this.providerConfig = providerConfig;
+        this.maxDescrLenghtConfig = maxDescrLenghtConfig;
     }
 
-    public CarPart create(final RawCarPart rawCarPart) throws IncorrectFieldException, CarPartExistsException {
+    public CarPart create(final RawCarPart rawCarPart) throws UseCaseException {
         CarPartValidator.validate(rawCarPart);
 
         String searchVendor = converter.convertToSearchString(rawCarPart.getVendor());
         String searchNumber = converter.convertToSearchString(rawCarPart.getNumber());
-        String description = rawCarPart.getDescription().length() <= providerConfig.getMaxDescriptionLenght()
+        String description = rawCarPart.getDescription().length() <= maxDescrLenghtConfig.getMaxDescriptionLenght()
                 ? rawCarPart.getDescription()
-                : rawCarPart.getDescription().substring(0, providerConfig.getMaxDescriptionLenght());
+                : rawCarPart.getDescription().substring(0, maxDescrLenghtConfig.getMaxDescriptionLenght());
 
         if(repository.findBySearchFields(searchVendor, searchNumber).isPresent())
         {
@@ -37,7 +42,7 @@ public final class CreateCarPart {
                 .searchVendor(searchVendor)
                 .searchNumber(searchNumber)
                 .description(description)
-                .price(Float.parseFloat(rawCarPart.getPrice()))
+                .price(Float.parseFloat(rawCarPart.getPrice().replace(',','.')))
                 .count(Integer.parseInt(rawCarPart.getCount()))
                 .build();
 
