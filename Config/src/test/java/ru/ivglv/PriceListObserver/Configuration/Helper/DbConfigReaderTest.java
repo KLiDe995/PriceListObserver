@@ -20,6 +20,7 @@ public class DbConfigReaderTest {
                 , "appUser"
                 , "123456789"
                 , "PriceItems"
+                , 512
         );
 
         DbConfig actual = dbConfigReader.read();

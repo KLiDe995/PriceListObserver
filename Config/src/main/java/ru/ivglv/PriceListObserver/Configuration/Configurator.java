@@ -3,15 +3,18 @@ package ru.ivglv.PriceListObserver.Configuration;
 import ru.ivglv.PriceListObserver.Configuration.Helper.DbConfigReader;
 import ru.ivglv.PriceListObserver.Configuration.Helper.MailConfigReader;
 import ru.ivglv.PriceListObserver.Configuration.Helper.ProviderConfigReader;
+import ru.ivglv.PriceListObserver.Configuration.Port.Config;
 import ru.ivglv.PriceListObserver.Configuration.Properties.DbConfig;
 import ru.ivglv.PriceListObserver.Configuration.Properties.MailConfig;
 import ru.ivglv.PriceListObserver.Configuration.Properties.ProviderConfig;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Set;
 
 public final class Configurator {
     private DbConfig dbConfig;
-    private ProviderConfig providerConfig;
+    private HashMap<String, ProviderConfig> providerConfigs;
     private MailConfig mailConfig;
 
     private DbConfigReader dbConfigReader;
@@ -27,18 +30,26 @@ public final class Configurator {
     public void readConfiguration() throws IOException
     {
         dbConfig = dbConfigReader.read();
-        providerConfig = providerConfigReader.read();
+        providerConfigs = convertHashTypeToProvider(providerConfigReader.read());
         mailConfig = mailConfigReader.read();
     }
 
-    public DbConfig getDbConfig()
+    private HashMap<String, ProviderConfig> convertHashTypeToProvider(HashMap<String, Config> input)
     {
+        HashMap<String, ProviderConfig> result = new HashMap<>();
+        for (String key : input.keySet()) {
+            result.put(key, (ProviderConfig) input.get(key));
+        }
+        return result;
+    }
+
+    public DbConfig getDbConfig() {
         return dbConfig;
     }
 
-    public ProviderConfig getProviderConfig()
+    public HashMap<String, ProviderConfig> getProviderConfigs()
     {
-        return providerConfig;
+        return providerConfigs;
     }
 
     public MailConfig getMailConfig() {
