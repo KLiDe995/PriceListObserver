@@ -1,12 +1,9 @@
 package ru.ivglv.PriceListObserver.UseCase.Validator;
 
 import org.testng.Assert;
-import org.testng.annotations.*;
 import org.testng.annotations.Test;
 import ru.ivglv.PriceListObserver.Model.Entity.RawCarPart;
-import ru.ivglv.PriceListObserver.Model.Exceptions.IncorrectFieldException;
-
-import static org.testng.Assert.*;
+import ru.ivglv.PriceListObserver.UseCase.Exceptions.IncorrectFieldException;
 
 public class CarPartValidatorTest {
 

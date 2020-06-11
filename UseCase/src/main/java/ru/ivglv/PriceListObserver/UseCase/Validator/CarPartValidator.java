@@ -1,7 +1,7 @@
 package ru.ivglv.PriceListObserver.UseCase.Validator;
 
 import ru.ivglv.PriceListObserver.Model.Entity.RawCarPart;
-import ru.ivglv.PriceListObserver.Model.Exceptions.IncorrectFieldException;
+import ru.ivglv.PriceListObserver.UseCase.Exceptions.IncorrectFieldException;
 
 public final class CarPartValidator {
     private static String vendor;
@@ -16,7 +16,7 @@ public final class CarPartValidator {
 
     private static void validatePrice(String price) throws IncorrectFieldException {
         try {
-            Float.parseFloat(price);
+            Float.parseFloat(price.replace(',','.'));
         }
         catch (NumberFormatException ex)
         {
