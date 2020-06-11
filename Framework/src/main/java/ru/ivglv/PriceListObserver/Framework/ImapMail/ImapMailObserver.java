@@ -2,7 +2,7 @@ package ru.ivglv.PriceListObserver.Framework.ImapMail;
 
 import com.sun.mail.imap.IMAPFolder;
 import org.jetbrains.annotations.NotNull;
-import ru.ivglv.PriceListAdapter.Adapter.Port.IncomingFileHandler;
+import ru.ivglv.PriceListObserver.Adapter.Port.IncomingFileHandler;
 import ru.ivglv.PriceListObserver.Configuration.Properties.MailConfig;
 
 import javax.mail.*;
@@ -50,7 +50,7 @@ public class ImapMailObserver implements Runnable {
                 public void messagesAdded(MessageCountEvent e) {
                     try {
                         Message[] msgs = e.getMessages();
-                        System.out.println("Got " + msgs.length + " new messages");
+                        //System.out.println("Got " + msgs.length + " new messages");
                         if(msgs.length > 0)
                             for(Message msg : msgs)
                                 handleMessage(msg, handler);

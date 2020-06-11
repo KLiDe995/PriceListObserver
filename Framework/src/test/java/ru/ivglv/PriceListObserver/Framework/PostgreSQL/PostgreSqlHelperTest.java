@@ -2,15 +2,10 @@ package ru.ivglv.PriceListObserver.Framework.PostgreSQL;
 
 import org.testng.Assert;
 import org.testng.annotations.*;
-import ru.ivglv.PriceListAdapter.Adapter.Port.ConnectionFailException;
 import ru.ivglv.PriceListObserver.Configuration.Properties.DbConfig;
 import ru.ivglv.PriceListObserver.Model.Entity.CarPart;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
-import java.util.Optional;
 
 public class PostgreSqlHelperTest {
     private PostgreSqlHelper postgreSqlHelper;
@@ -18,13 +13,14 @@ public class PostgreSqlHelperTest {
     CarPart testCarPart2;
     CarPart testCarPart3;
 
-    @BeforeClass(enabled = false)
+    @BeforeClass
     public void setUp() throws ClassNotFoundException {
         postgreSqlHelper = new PostgreSqlHelper(new DbConfig(
                 "jdbc:postgresql://127.0.0.1:5432/carparts"
                 , "appUser"
                 , "123456789"
-                , "PriceItems"));
+                , "PriceItems"
+                , 512));
         testCarPart1 = new CarPart.Builder("Test1Vendor", "Test1Number")
                 .searchVendor("Test1searchVendor")
                 .searchNumber("Test1searchNumber")
@@ -48,7 +44,7 @@ public class PostgreSqlHelperTest {
                 .build();
     }
 
-    @AfterClass(enabled = false)
+    @AfterClass
     public void tearDown() {
         postgreSqlHelper.disconnect();
     }

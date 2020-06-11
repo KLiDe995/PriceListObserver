@@ -4,7 +4,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import ru.ivglv.PriceListAdapter.Adapter.Port.IncomingFileHandler;
+import ru.ivglv.PriceListObserver.Adapter.Port.IncomingFileHandler;
 import ru.ivglv.PriceListObserver.Configuration.Properties.MailConfig;
 
 import javax.mail.MessagingException;
@@ -60,6 +60,9 @@ public class ImapMailObserverTest {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+            finally {
+                return null;
             }
         };
         imapMailObserver.addMessageListener(handler);

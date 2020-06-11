@@ -1,8 +1,8 @@
 package ru.ivglv.PriceListObserver.Framework.PostgreSQL;
 
 import org.jetbrains.annotations.NotNull;
-import ru.ivglv.PriceListAdapter.Adapter.Port.ConnectionFailException;
-import ru.ivglv.PriceListAdapter.Adapter.Port.RemoteDataBase;
+import ru.ivglv.PriceListObserver.Adapter.Port.ConnectionFailException;
+import ru.ivglv.PriceListObserver.Adapter.Port.RemoteDataBase;
 import ru.ivglv.PriceListObserver.Configuration.Properties.DbConfig;
 import ru.ivglv.PriceListObserver.Model.Entity.CarPart;
 
