@@ -1,8 +1,7 @@
-package ru.ivglv.PriceListAdapter.Adapter.Repository;
+package ru.ivglv.PriceListObserver.Adapter.Repository;
 
 import org.jetbrains.annotations.NotNull;
-import ru.ivglv.PriceListAdapter.Adapter.Port.RemoteDataBase;
-import ru.ivglv.PriceListObserver.Configuration.Properties.DbConfig;
+import ru.ivglv.PriceListObserver.Adapter.Port.RemoteDataBase;
 import ru.ivglv.PriceListObserver.Model.Entity.CarPart;
 import ru.ivglv.PriceListObserver.Model.Port.CarPartRepository;
 

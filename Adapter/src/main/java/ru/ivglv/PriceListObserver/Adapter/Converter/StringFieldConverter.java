@@ -1,4 +1,4 @@
-package ru.ivglv.PriceListAdapter.Adapter.Converter;
+package ru.ivglv.PriceListObserver.Adapter.Converter;
 
 import ru.ivglv.PriceListObserver.Model.Port.FieldConverter;
 

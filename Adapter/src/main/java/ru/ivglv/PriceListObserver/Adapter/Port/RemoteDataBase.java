@@ -1,4 +1,4 @@
-package ru.ivglv.PriceListAdapter.Adapter.Port;
+package ru.ivglv.PriceListObserver.Adapter.Port;
 
 import org.jetbrains.annotations.NotNull;
 import ru.ivglv.PriceListObserver.Model.Entity.CarPart;

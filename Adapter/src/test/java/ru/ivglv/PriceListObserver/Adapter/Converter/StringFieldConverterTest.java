@@ -1,9 +1,8 @@
-package ru.ivglv.PriceListAdapter.Adapter.Converter;
+package ru.ivglv.PriceListObserver.Adapter.Converter;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import ru.ivglv.PriceListObserver.Model.Exceptions.IncorrectFieldException;
 
 public class StringFieldConverterTest {
     private StringFieldConverter converter;
