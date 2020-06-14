@@ -26,9 +26,16 @@ public final class CarPartValidator {
 
     private static void validateCount(String count) throws IncorrectFieldException {
         try {
-            Integer.parseInt(count);
+            String checkedCountString = count;
+            if(checkedCountString.contains("-"))
+                checkedCountString = checkedCountString.split("-")[1];
+            Integer.parseInt(checkedCountString.replace("<", "").replace(">", ""));
         }
         catch (NumberFormatException ex)
+        {
+            throw new IncorrectFieldException("Count", vendor, number);
+        }
+        catch (IndexOutOfBoundsException ex)
         {
             throw new IncorrectFieldException("Count", vendor, number);
         }

@@ -30,23 +30,46 @@ public final class CreateCarPart {
 
         String searchVendor = converter.convertToSearchString(rawCarPart.getVendor());
         String searchNumber = converter.convertToSearchString(rawCarPart.getNumber());
-        String description = rawCarPart.getDescription().length() <= maxDescrLenghtConfig.getMaxDescriptionLenght()
-                ? rawCarPart.getDescription()
-                : rawCarPart.getDescription().substring(0, maxDescrLenghtConfig.getMaxDescriptionLenght());
+        String description = getCorrectDescription(rawCarPart.getDescription());
+        Float price = getCorrectPrice(rawCarPart.getPrice());
+        Integer count = getCorrectCount(rawCarPart.getCount());
 
         if(repository.findBySearchFields(searchVendor, searchNumber).isPresent())
         {
             throw new CarPartExistsException(rawCarPart.getVendor(), rawCarPart.getNumber());
         }
-        CarPart newCarPart = new CarPart.Builder(rawCarPart.getVendor(), rawCarPart.getNumber())
+        CarPart newCarPart = new CarPart.Builder(
+                    rawCarPart.getVendor().replace("'", "\"")
+                    , rawCarPart.getNumber().replace("'", "\"")
+        )
                 .searchVendor(searchVendor)
                 .searchNumber(searchNumber)
-                .description(description)
-                .price(Float.parseFloat(rawCarPart.getPrice().replace(',','.')))
-                .count(Integer.parseInt(rawCarPart.getCount()))
+                .description(description.replace("'", "\""))
+                .price(price)
+                .count(count)
                 .build();
 
         repository.create(newCarPart);
         return newCarPart;
     }
+
+    private String getCorrectDescription(String description) {
+         return description.length() <= maxDescrLenghtConfig.getMaxDescriptionLenght()
+                ? description
+                : description.substring(0, maxDescrLenghtConfig.getMaxDescriptionLenght());
+    }
+
+    private Float getCorrectPrice(String priceString)
+    {
+        return Float.parseFloat(priceString.replace(',','.'));
+    }
+
+    private Integer getCorrectCount(String countString)
+    {
+        String checkedCountString = countString;
+        if(checkedCountString.contains("-"))
+            checkedCountString = checkedCountString.split("-")[1];
+        return Integer.parseInt(checkedCountString.replace("<", "").replace(">", ""));
+    }
+
 }
