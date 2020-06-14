@@ -16,14 +16,18 @@ public class StringFieldConverterTest {
     public void testConvertToSearchString() {
         String input1 = "!@#Abcd%^&12 34_*()efgh";
         String input2 = "ABcD-1";
+        String input3 = "Àâòîáğîíÿ-";
 
         String expected1 = "ABCD1234EFGH";
         String expected2 = "ABCD1";
+        String expected3 = "ÀÂÒÎÁĞÎÍß";
 
         String actual1 = converter.convertToSearchString(input1);
         String actual2 = converter.convertToSearchString(input2);
+        String actual3 = converter.convertToSearchString(input3);
 
-        Assert.assertEquals(expected1, actual1);
-        Assert.assertEquals(expected2, actual2);
+        Assert.assertEquals(actual1, expected1);
+        Assert.assertEquals(actual2, expected2);
+        Assert.assertEquals(actual3, expected3);
     }
 }

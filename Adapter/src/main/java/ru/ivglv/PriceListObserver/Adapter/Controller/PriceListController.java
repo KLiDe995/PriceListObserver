@@ -1,8 +1,9 @@
 package ru.ivglv.PriceListObserver.Adapter.Controller;
 
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import org.jetbrains.annotations.NotNull;
 import ru.ivglv.PriceListObserver.Adapter.Converter.StringFieldConverter;
-import ru.ivglv.PriceListObserver.Adapter.Port.IncomingFileHandler;
 import ru.ivglv.PriceListObserver.Adapter.Port.RemoteDataBase;
 import ru.ivglv.PriceListObserver.Adapter.Repository.RemoteDbRepository;
 import ru.ivglv.PriceListObserver.Configuration.Properties.DbConfig;
@@ -10,9 +11,7 @@ import ru.ivglv.PriceListObserver.Configuration.Properties.ProviderConfig;
 import ru.ivglv.PriceListObserver.Model.Entity.CarPart;
 import ru.ivglv.PriceListObserver.Model.Entity.RawCarPart;
 import ru.ivglv.PriceListObserver.UseCase.CreateCarPart;
-import ru.ivglv.PriceListObserver.UseCase.Exceptions.UseCaseException;
 import ru.ivglv.PriceListObserver.UseCase.FindCarPart;
-import ru.ivglv.PriceListObserver.UseCase.Exceptions.CreateCarPartException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,27 +23,31 @@ public final class PriceListController {
     private final CreateCarPart carPartCreator;
     @NotNull
     private final FindCarPart carPartFinder;
-    @NotNull
-    private final IncomingFileHandler fileHandler;
 
-    public PriceListController(@NotNull RemoteDataBase remoteDataBase, @NotNull DbConfig dbConfig, @NotNull IncomingFileHandler fileHandler) {
+    public PriceListController(@NotNull RemoteDataBase remoteDataBase, @NotNull DbConfig dbConfig) {
         RemoteDbRepository repository = new RemoteDbRepository(remoteDataBase);
         StringFieldConverter converter = new StringFieldConverter();
         carPartCreator = new CreateCarPart(repository, converter, dbConfig);
         carPartFinder = new FindCarPart(repository, converter);
-        this.fileHandler = fileHandler;
     }
 
-    public CarPart createCarPart(RawCarPart rawCarPart) throws CreateCarPartException {
-        try {
-            return carPartCreator.create(rawCarPart);
-        } catch (UseCaseException ex) {
-            throw new CreateCarPartException(ex.getMessage());
-        }
-
+    public void createCarPart(String[] carPartFields, HashMap<String, Integer> columnIndices, ProviderConfig config) {
+        Flowable.just(carPartFields)
+                .map(fields ->
+                        carPartCreator.create(createRawCarPart(carPartFields, columnIndices, config)))
+                .subscribeOn(Schedulers.computation())
+                .subscribe(carPart -> System.out.println(
+                                "Car part with vendor '"
+                                + carPart.getVendor()
+                                + "' number '"
+                                + carPart.getNumber()
+                                + "' added to database")
+                        , throwable -> System.out.println(
+                                "Cannot add car part: " + throwable.getMessage())
+                );
     }
 
-    public RawCarPart createRawCarPart(String[] values, HashMap<String, Integer> columnIndices, ProviderConfig config)
+    private RawCarPart createRawCarPart(String[] values, HashMap<String, Integer> columnIndices, ProviderConfig config)
     {
         return new RawCarPart.Builder(
                     values[columnIndices.get(config.getVendorColumnName())]
