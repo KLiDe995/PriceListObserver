@@ -6,7 +6,9 @@ import ru.ivglv.PriceListObserver.Configuration.Properties.ProviderConfig;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.spi.ResourceBundleProvider;
 
 public final class ProviderConfigReader extends ConfigListReader {
     private final String PROVIDER_FILE_PREFIX = "provider-";
@@ -20,7 +22,7 @@ public final class ProviderConfigReader extends ConfigListReader {
     public HashMap<String, Config> read() throws IOException
     {
         HashMap<String, Config> result = new HashMap<>();
-        ResourceBundle propList = ResourceBundle.getBundle(bundleName,CsControl.Cp1251);
+        ResourceBundle propList = ResourceBundle.getBundle(bundleName);
         propList.getKeys().asIterator().forEachRemaining(key -> {
             result.put(propList.getString(key)
                     , readProviderConfig(PROVIDER_FILE_PREFIX + key.split(PROVIDER_SUFFIX_DELIMETER)[0]));
@@ -30,7 +32,7 @@ public final class ProviderConfigReader extends ConfigListReader {
 
     private ProviderConfig readProviderConfig(String fileName)
     {
-        ResourceBundle prop = ResourceBundle.getBundle(fileName,CsControl.Cp1251);
+        ResourceBundle prop = ResourceBundle.getBundle(fileName);
         return new ProviderConfig(
                 prop.getString("vendor_column_name")
                 , prop.getString("number_column_name")

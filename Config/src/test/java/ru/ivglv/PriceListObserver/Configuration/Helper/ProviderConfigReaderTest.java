@@ -22,7 +22,7 @@ public class ProviderConfigReaderTest {
                 "Бренд"
                 , "Каталожный номер"
                 , "Описание"
-                , "Цена"
+                , "Цена, руб."
                 , "Наличие"
         ));
         expected.put("test@example.com", new ProviderConfig(

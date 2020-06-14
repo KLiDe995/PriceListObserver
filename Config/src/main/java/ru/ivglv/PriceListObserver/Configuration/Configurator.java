@@ -10,7 +10,6 @@ import ru.ivglv.PriceListObserver.Configuration.Properties.ProviderConfig;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Set;
 
 public final class Configurator {
     private DbConfig dbConfig;

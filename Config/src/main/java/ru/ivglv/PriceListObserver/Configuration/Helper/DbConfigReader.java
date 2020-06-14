@@ -4,7 +4,10 @@ import ru.ivglv.PriceListObserver.Configuration.Port.ConfigReader;
 import ru.ivglv.PriceListObserver.Configuration.Properties.DbConfig;
 
 import java.io.IOException;
+import java.lang.module.ModuleFinder;
+import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.spi.ResourceBundleProvider;
 
 public final class DbConfigReader extends ConfigReader {
     private final Integer DEFAULT_DESCR_LENGHT = 512;
@@ -16,7 +19,7 @@ public final class DbConfigReader extends ConfigReader {
     @Override
     public DbConfig read() throws IOException
     {
-        ResourceBundle prop = ResourceBundle.getBundle(bundleName,CsControl.Cp1251);
+        ResourceBundle prop = ResourceBundle.getBundle(bundleName);
 
         return new DbConfig(
             prop.getString("db_url")

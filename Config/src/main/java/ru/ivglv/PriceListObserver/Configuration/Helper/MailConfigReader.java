@@ -18,7 +18,7 @@ public final class MailConfigReader extends ConfigReader {
     @Override
     public MailConfig read() throws IOException
     {
-        ResourceBundle prop = ResourceBundle.getBundle(bundleName,CsControl.Cp1251);
+        ResourceBundle prop = ResourceBundle.getBundle(bundleName);
 
         return new MailConfig(
                 prop.getString("imap_auth_server")
