@@ -1,7 +1,7 @@
 package ru.ivglv.PriceListObserver.Framework.PostgreSQL;
 
 import org.jetbrains.annotations.NotNull;
-import ru.ivglv.PriceListObserver.Adapter.Port.ConnectionFailException;
+import ru.ivglv.PriceListObserver.Adapter.Port.RemoteDbFailException;
 import ru.ivglv.PriceListObserver.Adapter.Port.RemoteDataBase;
 import ru.ivglv.PriceListObserver.Configuration.Properties.DbConfig;
 import ru.ivglv.PriceListObserver.Model.Entity.CarPart;
@@ -28,7 +28,7 @@ public class PostgreSqlHelper implements RemoteDataBase {
     }
 
     @Override
-    public void insert(@NotNull CarPart carPart) throws ConnectionFailException {
+    public void insert(@NotNull CarPart carPart) throws RemoteDbFailException {
         try {
             Statement statement = dbConnection.createStatement();
             statement.executeUpdate(
@@ -48,22 +48,24 @@ public class PostgreSqlHelper implements RemoteDataBase {
         }
         catch (SQLException ex)
         {
-            throw new ConnectionFailException(ex.getMessage());
+            throw new RemoteDbFailException("Problem in VENDOR='" + carPart.getVendor() + "' NUMBER='" + carPart.getNumber() + "': " + ex.getMessage());
         }
     }
 
     @Override
-    public void connect() throws ConnectionFailException {
+    public void connect() throws RemoteDbFailException {
         try {
+            System.out.println("Connecting to DB...");
             dbConnection = DriverManager.getConnection(config.getDbUrl(), config.getDbUser(), config.getDbPass());
+            System.out.println("Connection to DB established");
         }
         catch (SQLException ex)
         {
-            throw new ConnectionFailException(ex.getMessage());
+            throw new RemoteDbFailException(ex.getMessage());
         }
     }
 
-    public boolean connected() throws ConnectionFailException
+    public boolean connected() throws RemoteDbFailException
     {
         try
         {
@@ -71,7 +73,7 @@ public class PostgreSqlHelper implements RemoteDataBase {
         }
         catch (SQLException ex)
         {
-            throw new ConnectionFailException(ex.getMessage());
+            throw new RemoteDbFailException(ex.getMessage());
         }
     }
 
@@ -86,7 +88,7 @@ public class PostgreSqlHelper implements RemoteDataBase {
     @Override
     public Optional<CarPart> selectByIndex(
             @NotNull String searchVendor
-            , @NotNull String searchNumber) throws ConnectionFailException
+            , @NotNull String searchNumber) throws RemoteDbFailException
     {
         Optional<CarPart> result = Optional.empty();
         try {
@@ -112,13 +114,13 @@ public class PostgreSqlHelper implements RemoteDataBase {
             }
             statement.close();
         } catch (SQLException ex) {
-            throw new ConnectionFailException(ex.getMessage());
+            throw new RemoteDbFailException(ex.getMessage());
         }
         return result;
     }
 
     @Override
-    public List<CarPart> selectAll() throws ConnectionFailException {
+    public List<CarPart> selectAll() throws RemoteDbFailException {
         try {
             Statement statement = dbConnection.createStatement();
             ResultSet queryResult = statement.executeQuery(
@@ -142,11 +144,11 @@ public class PostgreSqlHelper implements RemoteDataBase {
             statement.close();
             return result;
         } catch (SQLException ex) {
-            throw new ConnectionFailException(ex.getMessage());
+            throw new RemoteDbFailException(ex.getMessage());
         }
     }
 
-    public void deleteAll() throws ConnectionFailException
+    public void deleteAll() throws RemoteDbFailException
     {
         try {
             Statement statement = dbConnection.createStatement();
@@ -155,7 +157,7 @@ public class PostgreSqlHelper implements RemoteDataBase {
             );
             statement.close();
         } catch (SQLException ex) {
-            throw new ConnectionFailException(ex.getMessage());
+            throw new RemoteDbFailException(ex.getMessage());
         }
     }
 }

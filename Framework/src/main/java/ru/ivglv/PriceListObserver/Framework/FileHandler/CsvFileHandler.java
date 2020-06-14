@@ -6,14 +6,14 @@ import org.jetbrains.annotations.NotNull;
 import ru.ivglv.PriceListObserver.Adapter.Controller.PriceListController;
 import ru.ivglv.PriceListObserver.Adapter.Port.IncomingFileHandler;
 import ru.ivglv.PriceListObserver.Configuration.Properties.ProviderConfig;
-import ru.ivglv.PriceListObserver.Model.Entity.CarPart;
-import ru.ivglv.PriceListObserver.UseCase.Exceptions.CreateCarPartException;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CsvFileHandler implements IncomingFileHandler {
     private final String CSV_COLUMN_DELIMETER = ";";
@@ -28,46 +28,62 @@ public class CsvFileHandler implements IncomingFileHandler {
     }
 
     @Override
-    public Flowable<CarPart> handle(File file, String sender) throws CreateCarPartException, IOException {
-        return handleFileWithProvider(file, providerConfigs.get(sender));
+    public void handle(File file, String sender) throws IOException {
+        handleFileWithProvider(file, providerConfigs.get(convertToEmail(sender)));
     }
 
-    private Flowable<CarPart> handleFileWithProvider(File file, ProviderConfig config) throws CreateCarPartException, IOException {
+    private String convertToEmail(String sender)
+    {
+        return sender.split(" ")[1].replace("<", "").replace(">", "");
+    }
+
+    private void handleFileWithProvider(File file, ProviderConfig config) throws IOException {
         HashMap<String, Integer> columnIndices = getColumnIndices(Files.lines(file.toPath()).findFirst().orElseThrow(), config);
 
-        return Flowable.fromArray(Files.lines(file.toPath()).skip(1).toArray())
-                .flatMap(o ->
-                        Flowable.just((String) o)
-                            .subscribeOn(Schedulers.computation())
-                            .map(line -> line.split(CSV_COLUMN_DELIMETER))
-                            .doOnError(throwable -> {
-                                throw new CreateCarPartException("Cannot split line {" + (String) o + "}"); //TODO: логирование
-                            })
-                )
-                .flatMap(carPartFields ->
-                        Flowable.just(carPartFields)
-                            .subscribeOn(Schedulers.computation())
-                            .map(fields ->
-                                controller.createCarPart(controller.createRawCarPart(carPartFields, columnIndices, config)))
-                            .doOnError(throwable -> System.out.println(throwable.getMessage())) //TODO: логирование
-                )
-                .flatMap(carPart ->
-                        Flowable.just(carPart)
-                            .subscribeOn(Schedulers.computation())
-                            .map(printableCarPart -> {
-                                        System.out.println(
-                                                "Car part with vendor '"
-                                                        + printableCarPart.getVendor()
-                                                        + "' number '"
-                                                        + printableCarPart.getNumber()
-                                                        + "' added to database");
-                                        return printableCarPart;
-                                    })
-                            .doOnError(Throwable::printStackTrace) //TODO: логирование
-                );
+        Flowable.fromArray(Files.lines(file.toPath()).skip(1).toArray())
+                .subscribeOn(Schedulers.computation())
+                .flatMap(o -> splitCsvLineFlow((String) o))
+                .doOnNext(carPartFields -> controller.createCarPart(carPartFields, columnIndices, config))
+                .subscribe(ignored -> {}
+                        , throwable -> System.out.println(throwable.getMessage())
+                        , () -> System.out.println("File processing complete"));
     }
 
-    private HashMap<String, Integer> getColumnIndices(String firstLine, ProviderConfig config) {
+    private Flowable<String[]> splitCsvLineFlow(String line)
+    {
+        return Flowable.just(line)
+                .subscribeOn(Schedulers.computation())
+                .map(this::splitCsvLine);
+    }
+
+    public String[] splitCsvLine(String line)
+    {
+        if(line.contains("\""))
+        {
+            HashMap<Integer, String> hashMap = new HashMap<>();
+            Pattern pattern = Pattern.compile(";\".+?\";");
+            Matcher matcher = pattern.matcher(line);
+            String mappedString = line;
+            while(matcher.find())
+            {
+                String found = line.substring(matcher.start() + 1, matcher.end() - 1);
+                hashMap.put(found.hashCode(), found);
+                mappedString = mappedString.replace(found, String.valueOf(found.hashCode()));
+            }
+            String[] splittedLine = mappedString.split(CSV_COLUMN_DELIMETER);
+            for(int i = 0; i < splittedLine.length; i++)
+                try {
+                    Integer key = Integer.parseInt(splittedLine[i]);
+                    if(hashMap.containsKey(key))
+                        splittedLine[i] = hashMap.get(key).replace("\"", "");
+                } catch (NumberFormatException ignored) {}
+            return splittedLine;
+        }
+        else
+            return line.split(CSV_COLUMN_DELIMETER);
+    }
+
+    private HashMap<String, Integer> getColumnIndices(String firstLine, @NotNull ProviderConfig config) {
         HashMap<String, Integer> result = new HashMap<>();
         String[] columns = firstLine.split(CSV_COLUMN_DELIMETER);
         List<String> columnKeys = config.getAllColumnNames();

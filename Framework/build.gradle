@@ -9,5 +9,6 @@ dependencies {
             , project(':Config')
             , project(':UseCase')
             , "javax.mail:mail:1.4.7"
+            , "org.postgresql:postgresql:42.0.0.jre7"
     )
 }

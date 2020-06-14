@@ -44,12 +44,12 @@ public class PostgreSqlHelperTest {
                 .build();
     }
 
-    @AfterClass
+    @AfterClass(enabled = false)
     public void tearDown() {
         postgreSqlHelper.disconnect();
     }
 
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void testCheckClass() {
         try {
             postgreSqlHelper.checkClass();
