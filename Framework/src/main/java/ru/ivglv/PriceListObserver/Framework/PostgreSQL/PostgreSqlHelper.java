@@ -4,22 +4,30 @@ import org.jetbrains.annotations.NotNull;
 import ru.ivglv.PriceListObserver.Adapter.Port.RemoteDbFailException;
 import ru.ivglv.PriceListObserver.Adapter.Port.RemoteDataBase;
 import ru.ivglv.PriceListObserver.Configuration.Properties.DbConfig;
+import ru.ivglv.PriceListObserver.Adapter.Dagger.Session;
 import ru.ivglv.PriceListObserver.Model.Entity.CarPart;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.sql.*;
 
-public class PostgreSqlHelper implements RemoteDataBase {
+@Session
+public final class PostgreSqlHelper implements RemoteDataBase {
     private final String DB_DRIVER = "org.postgresql.Driver";
     private Connection dbConnection;
     private final DbConfig config;
 
-    public PostgreSqlHelper(DbConfig config) throws ClassNotFoundException
+    @Inject
+    public PostgreSqlHelper(DbConfig config)
     {
         this.config = config;
-        checkClass();
+        try {
+            checkClass();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace(); // TODO: логи
+        }
     }
 
     public void checkClass() throws ClassNotFoundException

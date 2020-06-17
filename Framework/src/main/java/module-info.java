@@ -12,4 +12,6 @@ module PriceListObserver.Framework {
     requires mail;
     requires io.reactivex.rxjava3;
     requires org.reactivestreams;
+    requires javax.inject;
+    requires dagger;
 }

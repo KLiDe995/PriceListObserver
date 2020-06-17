@@ -2,24 +2,24 @@ package ru.ivglv.PriceListObserver.Controller;
 
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import ru.ivglv.PriceListObserver.Adapter.Controller.PriceListController;
-import ru.ivglv.PriceListObserver.Adapter.Port.IncomingFileHandler;
+import org.jetbrains.annotations.NotNull;
 import ru.ivglv.PriceListObserver.Configuration.Configurator;
-import ru.ivglv.PriceListObserver.Configuration.Properties.MailConfig;
-import ru.ivglv.PriceListObserver.Configuration.Properties.ProviderConfig;
-import ru.ivglv.PriceListObserver.Framework.FileHandler.CsvFileHandler;
-import ru.ivglv.PriceListObserver.Framework.ImapMail.ImapMailObserver;
-import ru.ivglv.PriceListObserver.Framework.PostgreSQL.PostgreSqlHelper;
 
-import java.io.IOException;
-import java.util.Set;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public final class ConsoleController {
-    private PostgreSqlHelper remoteDb;
-    private ImapMailObserver mailObserver;
+    @NotNull
+    private final Configurator configurator;
+    private ObserverSession session;
+
     private boolean started;
 
-    public ConsoleController() {
+    @Inject
+    public ConsoleController(Configurator configurator) {
+        this.configurator = configurator;
+        //this.session = sessionComponent;
     }
 
     public void handleCommand(String command)
@@ -35,61 +35,34 @@ public final class ConsoleController {
         System.exit(0);
     }
 
-    private void startObserving()
-    {
+    private void startObserving() {
         started = true;
         System.out.println("Starting process...");
 
-        Flowable.fromCallable(this::createConfiguration)
+        Flowable.fromCallable(configurator::readConfiguration)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.single())
-                .doOnNext(this::initConnections)
-                .flatMap(ignored -> Flowable.fromRunnable(mailObserver))
+                .doOnNext(ignored -> {
+                    SessionFactory sessionFactory = Injector.getInstance().initSessionComponent();
+                    session = sessionFactory.session();
+                    session.openSession();
+                })
+                .flatMap(ignored -> Flowable.fromRunnable(session.getImapMailObserver()))
                 .subscribe(
                         ignored -> {}
                         , throwable -> {
                             System.out.println("Got some problem: " + throwable.getMessage());
                         }
+                        , () -> {
+                            session.closeSession();
+                            Injector.getInstance().clearSessionComponent();
+                        }
                 );
-    }
-
-    private void initConnections(Configurator configurator) throws ClassNotFoundException {
-        PostgreSqlHelper postgreSqlHelper = createRemoteDbInstance(configurator);
-        PriceListController controller = new PriceListController(postgreSqlHelper, configurator.getDbConfig());
-        CsvFileHandler csvFileHandler = new CsvFileHandler(configurator.getProviderConfigs(), controller);
-
-        postgreSqlHelper.connect();
-        initImapFramework(configurator.getMailConfig(), configurator.getProviderConfigs().keySet(), csvFileHandler);
     }
 
     private void stopObserving()
     {
-        if(mailObserver != null)
-            mailObserver.closeSession();
-        if(remoteDb != null)
-            remoteDb.disconnect();
+        if(session != null) session.closeSession();
         started = false;
-    }
-
-    private Configurator createConfiguration() throws IOException {
-        Configurator configurator = new Configurator(
-                "dbconfig"
-                , "providers"
-                , "imap"
-        );
-        configurator.readConfiguration();
-        return configurator;
-    }
-
-    private PostgreSqlHelper createRemoteDbInstance(Configurator configurator) throws ClassNotFoundException {
-        remoteDb = new PostgreSqlHelper(configurator.getDbConfig());
-        return remoteDb;
-    }
-
-    private void initImapFramework(MailConfig config, Set<String> emails, IncomingFileHandler fileHandler)
-    {
-        mailObserver = new ImapMailObserver(config, emails);
-        mailObserver.openSession();
-        mailObserver.addMessageListener(fileHandler);
     }
 }

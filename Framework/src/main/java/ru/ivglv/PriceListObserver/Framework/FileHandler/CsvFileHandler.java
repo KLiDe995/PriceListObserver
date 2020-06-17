@@ -6,7 +6,9 @@ import org.jetbrains.annotations.NotNull;
 import ru.ivglv.PriceListObserver.Adapter.Controller.PriceListController;
 import ru.ivglv.PriceListObserver.Adapter.Port.IncomingFileHandler;
 import ru.ivglv.PriceListObserver.Configuration.Properties.ProviderConfig;
+import ru.ivglv.PriceListObserver.Adapter.Dagger.Session;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,13 +17,15 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CsvFileHandler implements IncomingFileHandler {
+@Session
+public final class CsvFileHandler implements IncomingFileHandler {
     private final String CSV_COLUMN_DELIMETER = ";";
     @NotNull
     private final HashMap<String, ProviderConfig> providerConfigs;
     @NotNull
     private final PriceListController controller;
 
+    @Inject
     public CsvFileHandler(@NotNull HashMap<String, ProviderConfig> providerConfigs, @NotNull PriceListController controller) {
         this.providerConfigs = providerConfigs;
         this.controller = controller;

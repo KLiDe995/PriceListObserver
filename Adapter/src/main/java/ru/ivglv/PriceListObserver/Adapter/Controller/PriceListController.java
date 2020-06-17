@@ -4,6 +4,7 @@ import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import org.jetbrains.annotations.NotNull;
 import ru.ivglv.PriceListObserver.Adapter.Converter.StringFieldConverter;
+import ru.ivglv.PriceListObserver.Adapter.Dagger.Session;
 import ru.ivglv.PriceListObserver.Adapter.Port.RemoteDataBase;
 import ru.ivglv.PriceListObserver.Adapter.Repository.RemoteDbRepository;
 import ru.ivglv.PriceListObserver.Configuration.Properties.DbConfig;
@@ -13,17 +14,21 @@ import ru.ivglv.PriceListObserver.Model.Entity.RawCarPart;
 import ru.ivglv.PriceListObserver.UseCase.CreateCarPart;
 import ru.ivglv.PriceListObserver.UseCase.FindCarPart;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+@Session
 public final class PriceListController {
     @NotNull
     private final CreateCarPart carPartCreator;
     @NotNull
     private final FindCarPart carPartFinder;
 
+    @Inject
     public PriceListController(@NotNull RemoteDataBase remoteDataBase, @NotNull DbConfig dbConfig) {
         RemoteDbRepository repository = new RemoteDbRepository(remoteDataBase);
         StringFieldConverter converter = new StringFieldConverter();

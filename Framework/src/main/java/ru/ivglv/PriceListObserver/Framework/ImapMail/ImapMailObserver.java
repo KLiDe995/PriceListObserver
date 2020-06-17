@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.Set;
 
-public class ImapMailObserver implements Runnable {
+public final class ImapMailObserver implements Runnable {
     @NotNull
     private final MailConfig mailConfig;
     private final Set<String> permittedEmails;

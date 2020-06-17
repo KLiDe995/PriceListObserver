@@ -5,4 +5,7 @@ module PriceListObserver.App {
     requires io.reactivex.rxjava3;
     requires org.reactivestreams;
     requires java.sql;
+    requires javax.inject;
+    requires dagger;
+    requires org.jetbrains.annotations;
 }

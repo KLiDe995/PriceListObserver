@@ -26,11 +26,12 @@ public final class Configurator {
         mailConfigReader = new MailConfigReader(imapConfigName);
     }
 
-    public void readConfiguration() throws IOException
+    public Configurator readConfiguration() throws IOException
     {
         dbConfig = dbConfigReader.read();
         providerConfigs = convertHashTypeToProvider(providerConfigReader.read());
         mailConfig = mailConfigReader.read();
+        return this;
     }
 
     private HashMap<String, ProviderConfig> convertHashTypeToProvider(HashMap<String, Config> input)
